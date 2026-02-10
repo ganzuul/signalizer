@@ -51,7 +51,11 @@ cm.rewrite_version_header("../Source/version.h", major, minor, build)
 
 #run targets
 
-compiler_invoke("--target=Release")
+build_status = compiler_invoke("--target=Release")
+
+if build_status != 0:
+	print("------> Build failed with status " + str(build_status) + ", aborting packaging step")
+	sys.exit(build_status)
 
 # output dirs
 release_dir = "Signalizer Linux Release " + version_string
@@ -59,6 +63,10 @@ release_dir = "Signalizer Linux Release " + version_string
 cm.create_build_file("Build.log", version_string)
 
 # build skeleton
+if os.path.exists(release_dir):
+	print("------> Removing stale output directory " + release_dir)
+	sh.rmtree(release_dir)
+
 sh.copytree("Skeleton", release_dir)
 sh.copyfile("Build.log", cm.join(release_dir, "Build.log"))
 
