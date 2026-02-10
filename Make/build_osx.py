@@ -1,5 +1,5 @@
 import io
-import ConfigParser as cp
+import configparser as cp
 import os
 import sys
 import shutil as sh
